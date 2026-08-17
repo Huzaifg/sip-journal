@@ -11,29 +11,33 @@ const links = [
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="shell">
+    <div className="app">
       <header className="topbar">
-        <NavLink to="/" className="brand">
-          <span className="brand-mark" aria-hidden="true" />
-          Sip Journal
-        </NavLink>
-        <nav className="nav" aria-label="Main">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === '/'}
-              className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+        <div className="topbar-inner">
+          <NavLink to="/" className="brand">
+            <span className="brand-mark" aria-hidden="true" />
+            <span className="brand-name">Sip Journal</span>
+          </NavLink>
+          <nav className="nav" aria-label="Main">
+            {links.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === '/'}
+                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
       </header>
-      <main className="page">{children}</main>
-      <footer className="colophon">
-        A tasting notebook for one palate. Notes live in this browser unless you export them.
-      </footer>
+      <div className="shell">
+        <main className="page">{children}</main>
+        <footer className="colophon">
+          A tasting notebook for one palate. Notes live in this browser unless you export them.
+        </footer>
+      </div>
     </div>
   )
 }

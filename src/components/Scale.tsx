@@ -8,13 +8,7 @@ type ScaleProps = {
 export function Scale({ label, value, onChange, readOnly }: ScaleProps) {
   return (
     <div className="scale">
-      <div className="scale-head">
-        <span className="scale-label">{label}</span>
-        <span className="scale-ends">
-          <em>Low</em>
-          <em>High</em>
-        </span>
-      </div>
+      <span className="scale-label">{label}</span>
       <div className="scale-dots" role={readOnly ? 'img' : 'radiogroup'} aria-label={label}>
         {Array.from({ length: 8 }, (_, index) => {
           const n = index + 1
@@ -34,6 +28,10 @@ export function Scale({ label, value, onChange, readOnly }: ScaleProps) {
             />
           )
         })}
+      </div>
+      <div className="scale-ends">
+        <em>Low</em>
+        <em>High</em>
       </div>
     </div>
   )

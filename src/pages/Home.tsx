@@ -9,7 +9,7 @@ export function HomePage() {
 
   return (
     <div className="stack">
-      <section className="hero sheet">
+      <section className="hero">
         <p className="kicker">A guide to getting to know your coffee</p>
         <h1>Taste on purpose.</h1>
         <p className="lede">
