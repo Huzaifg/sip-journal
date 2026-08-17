@@ -560,7 +560,7 @@ span.dot { cursor: default; }
   overflow-wrap: anywhere;
 }
 
-.radar, .flavor-map, .trend, .wheel { width: 100%; height: auto; display: block; }
+.radar, .trend, .wheel { width: 100%; height: auto; display: block; }
 .radar-grid { fill: none; stroke: var(--rule); }
 .radar-axis { stroke: var(--rule); }
 .radar-label { font-size: 13px; font-family: var(--serif); fill: var(--ink); }
@@ -571,16 +571,81 @@ span.dot { cursor: default; }
 }
 .radar-dot { fill: var(--accent); }
 
-.flavor-map-wrap {
-  overflow-x: auto;
-  max-width: 100%;
-  -webkit-overflow-scrolling: touch;
+.profile-board { display: grid; gap: 1.25rem; min-width: 0; }
+.balance-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
-.map-axis { fill: var(--ink-soft); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
-.map-node { fill: var(--gold); stroke: var(--accent); }
-.map-node.on { fill: var(--ember); stroke: var(--ink); }
-.map-tag { font-size: 11px; fill: var(--ink); }
-.map-count { font-size: 11px; fill: var(--sheet); font-weight: 600; }
+.balance-track {
+  position: relative;
+  display: flex;
+  height: 10px;
+  margin: 0.55rem 0 0.7rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--sheet-2);
+}
+.balance-fill.fruit { background: #c45c26; opacity: 0.55; }
+.balance-fill.comfort { background: #6b3426; opacity: 0.72; }
+.balance-knob {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--sheet);
+  transform: translate(-50%, -50%);
+}
+.balance-readout {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink);
+}
+.profile-family-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-bottom: 0.45rem;
+}
+.profile-family-head h3 { margin: 0; font-size: 1.05rem; }
+.profile-family-head span { color: var(--ink-soft); font-size: 0.85rem; }
+.profile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  border: 1.5px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.32rem 0.72rem;
+  color: var(--ink-soft);
+}
+.profile-chip em { font-style: normal; }
+.profile-chip.on {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: color-mix(
+    in srgb,
+    var(--ember) calc(14% + var(--weight, 0) * 30%),
+    var(--sheet)
+  );
+}
+.profile-chip.on em { font-family: var(--serif); font-style: italic; }
+.profile-chip b {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
 
 .trend-grid { stroke: var(--rule); }
 .trend-tick { font-size: 10px; fill: var(--ink-soft); }

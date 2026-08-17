@@ -116,24 +116,3 @@ export const FLAVOR_WHEEL: WheelCategory[] = [
     notes: ['brown sugar', 'honey', 'maple', 'vanilla', 'caramel'],
   },
 ]
-
-export const FLAVOR_MAP_LAYOUT: Record<string, { x: number; y: number }> = {
-  'baking spice': { x: 0.32, y: 0.72 },
-  caramel: { x: 0.28, y: 0.86 },
-  chocolate: { x: 0.18, y: 0.62 },
-  nuts: { x: 0.14, y: 0.48 },
-  apple: { x: 0.68, y: 0.66 },
-  berry: { x: 0.84, y: 0.72 },
-  cherry: { x: 0.78, y: 0.54 },
-  citrus: { x: 0.9, y: 0.82 },
-  'stone fruit': { x: 0.74, y: 0.42 },
-  'tropical fruit': { x: 0.88, y: 0.5 },
-  earthy: { x: 0.34, y: 0.2 },
-  herby: { x: 0.5, y: 0.22 },
-  roasty: { x: 0.18, y: 0.26 },
-  savory: { x: 0.42, y: 0.12 },
-  floral: { x: 0.62, y: 0.9 },
-  honey: { x: 0.46, y: 0.88 },
-  vanilla: { x: 0.4, y: 0.78 },
-  fermented: { x: 0.58, y: 0.34 },
-}

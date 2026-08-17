@@ -124,10 +124,11 @@ export function PalatePage() {
       </section>
 
       <section className="sheet">
-        <h2>Flavor profile map</h2>
+        <h2>What you keep tasting</h2>
         <p className="muted">
-          Every journal tag lives on this map. Left is roast and earth; right is fruit and floral.
-          Bottom is heavier; top is sweeter. Circles grow as you use a note more often.
+          Same words as the journal. A filled, darker chip is a note you have actually circled —
+          the number is how many cups. The bar at the top is the simple question: fruit-bright, or
+          cocoa and roast?
         </p>
         <FlavorMap counts={counts} />
       </section>

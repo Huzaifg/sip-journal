@@ -1,48 +1,89 @@
-import { FLAVOR_MAP_LAYOUT } from '../data/flavors'
+import type { CSSProperties } from 'react'
+import { FLAVOR_GROUPS } from '../data/flavors'
+
+const FRUIT = new Set([
+  'apple',
+  'berry',
+  'cherry',
+  'citrus',
+  'stone fruit',
+  'tropical fruit',
+  'floral',
+  'fermented',
+])
+const COMFORT = new Set([
+  'baking spice',
+  'caramel',
+  'chocolate',
+  'nuts',
+  'honey',
+  'vanilla',
+  'roasty',
+])
 
 type FlavorMapProps = {
   counts: { tag: string; count: number }[]
 }
 
 export function FlavorMap({ counts }: FlavorMapProps) {
+  const byTag = new Map(counts.map((row) => [row.tag, row.count]))
   const max = Math.max(1, ...counts.map((row) => row.count))
+  const fruit = counts.reduce((sum, row) => sum + (FRUIT.has(row.tag) ? row.count : 0), 0)
+  const comfort = counts.reduce((sum, row) => sum + (COMFORT.has(row.tag) ? row.count : 0), 0)
+  const total = fruit + comfort
+  const lean = total === 0 ? 0.5 : comfort / total
+
+  const readout =
+    total === 0
+      ? 'Nothing circled yet. After a tasting, the words you marked fill in like the paper journal.'
+      : fruit > comfort + 1
+        ? 'So far you are circling more fruit and florals than cocoa and roast.'
+        : comfort > fruit + 1
+          ? 'So far you are circling more cocoa, caramel, nuts, and roast than fruit.'
+          : 'Fruit-bright notes and cocoa/roast notes are showing up in about equal measure.'
+
   return (
-    <div className="flavor-map-wrap">
-      <svg className="flavor-map" viewBox="0 0 640 420" role="img" aria-label="Flavor profile map">
-        <text x="24" y="28" className="map-axis">
-          roast & earth
-        </text>
-        <text x="616" y="28" className="map-axis" textAnchor="end">
-          fruit & floral
-        </text>
-        <text x="24" y="404" className="map-axis">
-          heavier / savory
-        </text>
-        <text x="616" y="404" className="map-axis" textAnchor="end">
-          sweeter
-        </text>
-        {counts.map(({ tag, count }) => {
-          const layout = FLAVOR_MAP_LAYOUT[tag]
-          if (!layout) return null
-          const x = 48 + layout.x * 544
-          const y = 380 - layout.y * 340
-          const r = count === 0 ? 10 : 12 + (count / max) * 22
-          const opacity = count === 0 ? 0.28 : 0.55 + (count / max) * 0.45
-          return (
-            <g key={tag} transform={`translate(${x} ${y})`}>
-              <circle r={r} className={count ? 'map-node on' : 'map-node'} style={{ opacity }} />
-              <text y={r + 14} textAnchor="middle" className="map-tag">
-                {tag}
-              </text>
-              {count > 0 && (
-                <text y="4" textAnchor="middle" className="map-count">
-                  {count}
-                </text>
-              )}
-            </g>
-          )
-        })}
-      </svg>
+    <div className="profile-board">
+      <div className="balance">
+        <div className="balance-labels">
+          <span>Fruit & floral</span>
+          <span>Cocoa & roast</span>
+        </div>
+        <div className="balance-track" role="img" aria-label="Balance between fruit notes and cocoa notes">
+          <span className="balance-fill fruit" style={{ width: `${(1 - lean) * 100}%` }} />
+          <span className="balance-fill comfort" style={{ width: `${lean * 100}%` }} />
+          <span className="balance-knob" style={{ left: `${lean * 100}%` }} />
+        </div>
+        <p className="balance-readout">{readout}</p>
+      </div>
+
+      {FLAVOR_GROUPS.map((group) => {
+        const groupTotal = group.tags.reduce((sum, tag) => sum + (byTag.get(tag) ?? 0), 0)
+        return (
+          <div key={group.id} className="profile-family">
+            <div className="profile-family-head">
+              <h3>{group.label}</h3>
+              <span>{groupTotal === 0 ? 'none yet' : `${groupTotal} mark${groupTotal === 1 ? '' : 's'}`}</span>
+            </div>
+            <div className="profile-chips">
+              {group.tags.map((tag) => {
+                const count = byTag.get(tag) ?? 0
+                const weight = count / max
+                return (
+                  <span
+                    key={tag}
+                    className={count ? 'profile-chip on' : 'profile-chip'}
+                    style={{ '--weight': String(weight) } as CSSProperties}
+                  >
+                    <em>{tag}</em>
+                    {count > 0 && <b>{count}</b>}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
