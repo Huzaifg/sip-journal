@@ -90,7 +90,9 @@ export function palateStats(tastings: Tasting[]) {
 }
 
 export function leanCopy(stats: ReturnType<typeof palateStats>) {
-  if (stats.count === 0) return 'Log a few coffees and a shape will show up here.'
+  if (stats.count === 0) {
+    return 'The map and triangle are ready. Log coffees in this browser and they will start to cluster.'
+  }
   if (stats.comfortHits > stats.fruitHits + 1) {
     return 'Your notes lean cocoa, caramel, nuts, and roast — the comfort side of the wheel.'
   }

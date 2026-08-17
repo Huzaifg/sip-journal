@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { FlavorMap } from '../components/FlavorMap'
+import { FlavorWheel } from '../components/FlavorWheel'
 import { RadarChart } from '../components/RadarChart'
 import { TrendChart } from '../components/TrendChart'
 import { flavorCounts, leanCopy, palateStats, shiftCopy } from '../lib/stats'
@@ -17,6 +18,7 @@ export function PalatePage() {
   const fileRef = useRef<HTMLInputElement>(null)
   const stats = palateStats(tastings)
   const counts = flavorCounts(tastings)
+  const empty = tastings.length === 0
 
   async function onExport() {
     const backup = await exportBackup()
@@ -49,84 +51,99 @@ export function PalatePage() {
         </p>
       </header>
 
-      {tastings.length === 0 ? (
-        <div className="empty sheet">
-          <h2>No map yet</h2>
-          <p>Taste a few coffees from the subscription. The triangle, the map, and the trend line fill in from your own scores.</p>
-          <Link className="btn" to="/taste">
-            Log a coffee
-          </Link>
-        </div>
-      ) : (
-        <>
-          <section className="stat-row">
-            <div className="stat">
-              <span>Tastings</span>
-              <strong>{stats.count}</strong>
-            </div>
-            <div className="stat">
-              <span>Avg acidity</span>
-              <strong>{fmt(stats.acidity)}</strong>
-            </div>
-            <div className="stat">
-              <span>Avg bitterness</span>
-              <strong>{fmt(stats.bitterness)}</strong>
-            </div>
-            <div className="stat">
-              <span>Avg body</span>
-              <strong>{fmt(stats.body)}</strong>
-            </div>
-            <div className="stat">
-              <span>Favorite brew</span>
-              <strong>{stats.brewFavorite}</strong>
-            </div>
-          </section>
-
-          <section className="split charts">
-            <div className="sheet">
-              <h2>The three scales</h2>
-              <p className="muted">Average of every logged cup, on the same 1–8 dots as the journal.</p>
-              <RadarChart
-                acidity={stats.acidity}
-                bitterness={stats.bitterness}
-                body={stats.body}
-              />
-            </div>
-            <div className="sheet">
-              <h2>Words you keep circling</h2>
-              <ul className="top-flavors">
-                {stats.topFlavors.length === 0 && <li>No flavor tags yet.</li>}
-                {stats.topFlavors.map((row) => (
-                  <li key={row.tag}>
-                    <span>{row.tag}</span>
-                    <b>{row.count}</b>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
-          <section className="sheet">
-            <h2>Flavor profile map</h2>
-            <p className="muted">
-              Bigger circles are notes you use more. Left is roast and earth; right is fruit and
-              floral. Bottom is heavier; top is sweeter.
+      {empty && (
+        <aside className="primer">
+          <div>
+            <p className="kicker">This browser is empty</p>
+            <p>
+              The triangle, the flavor map, and the wheel are below. They stay faint until you log
+              coffees here — or import a backup from another machine.
             </p>
-            <FlavorMap counts={counts} />
-          </section>
-
-          <section className="sheet">
-            <h2>Across bags</h2>
-            <TrendChart points={stats.timeline} />
-          </section>
-        </>
+          </div>
+          <div className="primer-actions">
+            <Link className="btn" to="/taste">
+              Log a coffee
+            </Link>
+          </div>
+        </aside>
       )}
+
+      <section className="stat-row">
+        <div className="stat">
+          <span>Tastings</span>
+          <strong>{stats.count}</strong>
+        </div>
+        <div className="stat">
+          <span>Avg acidity</span>
+          <strong>{fmt(stats.acidity)}</strong>
+        </div>
+        <div className="stat">
+          <span>Avg bitterness</span>
+          <strong>{fmt(stats.bitterness)}</strong>
+        </div>
+        <div className="stat">
+          <span>Avg body</span>
+          <strong>{fmt(stats.body)}</strong>
+        </div>
+        <div className="stat">
+          <span>Favorite brew</span>
+          <strong>{stats.brewFavorite ?? '—'}</strong>
+        </div>
+      </section>
+
+      <section className="split charts">
+        <div className="sheet">
+          <h2>The three scales</h2>
+          <p className="muted">
+            Average acidity, bitterness, and body — the same 1–8 dots as the journal. The triangle
+            fills in after the first scored cup.
+          </p>
+          <RadarChart
+            acidity={stats.acidity}
+            bitterness={stats.bitterness}
+            body={stats.body}
+          />
+        </div>
+        <div className="sheet">
+          <h2>Words you keep circling</h2>
+          {stats.topFlavors.length === 0 ? (
+            <p className="muted">
+              Chocolate, citrus, roasty, floral — whatever you circle on a tasting will rank here.
+            </p>
+          ) : (
+            <ul className="top-flavors">
+              {stats.topFlavors.map((row) => (
+                <li key={row.tag}>
+                  <span>{row.tag}</span>
+                  <b>{row.count}</b>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <section className="sheet">
+        <h2>Flavor profile map</h2>
+        <p className="muted">
+          Every journal tag lives on this map. Left is roast and earth; right is fruit and floral.
+          Bottom is heavier; top is sweeter. Circles grow as you use a note more often.
+        </p>
+        <FlavorMap counts={counts} />
+      </section>
+
+      <FlavorWheel />
+
+      <section className="sheet">
+        <h2>Across bags</h2>
+        <TrendChart points={stats.timeline} />
+      </section>
 
       <section className="sheet backup">
         <h2>Keep a copy</h2>
         <p>
-          Tastings and photos are stored in this browser. Export a JSON backup before you switch
-          machines — or after a good run of the subscription.
+          Tastings and photos are stored in this browser, not on GitHub. Export a JSON backup
+          before you switch machines — or after a good run of the subscription.
         </p>
         <div className="form-actions">
           <button type="button" className="btn" onClick={() => void onExport()}>
