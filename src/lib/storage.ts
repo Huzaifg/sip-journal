@@ -1,3 +1,4 @@
+import { PAPER_JOURNAL_TASTING, PAPER_SEED_SKIP_KEY } from '../data/starter'
 import type { BackupFile, PhotoRecord, Tasting } from '../types'
 import { blobToDataUrl, dataUrlToBlob, uid } from './util'
 
@@ -63,6 +64,16 @@ export async function deleteTasting(id: string) {
     tx.onerror = () => reject(tx.error)
   })
   db.close()
+  if (id === PAPER_JOURNAL_TASTING.id) {
+    localStorage.setItem(PAPER_SEED_SKIP_KEY, '1')
+  }
+}
+
+export async function ensureStarterTasting() {
+  if (localStorage.getItem(PAPER_SEED_SKIP_KEY) === '1') return
+  const existing = await getTasting(PAPER_JOURNAL_TASTING.id)
+  if (existing) return
+  await saveTasting(PAPER_JOURNAL_TASTING)
 }
 
 export async function savePhoto(photo: PhotoRecord) {
